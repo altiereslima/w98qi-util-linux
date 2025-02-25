@@ -86,7 +86,8 @@ for phase in "${PHASES[@]}"; do
             --without-python
             --disable-nls
             --without-systemd
-            --without-udev
+            --disable-tests        # Desabilita a compilação dos testes
+            --disable-static      # Compila apenas bibliotecas dinâmicas
         )
         # Removido --enable-werror para evitar que warnings sejam tratados como erros
 
