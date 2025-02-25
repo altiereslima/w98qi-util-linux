@@ -89,6 +89,18 @@ for phase in "${PHASES[@]}"; do
             --enable-static
             --with-pic
         )
+
+        if [[ "$COVERAGE" == "yes" ]]; then
+            CFLAGS+=(--coverage)
+            CXXFLAGS+=(--coverage)
+            LDFLAGS+=(--coverage)
+        fi
+
+        git clean -xdf
+
+        ./autogen.sh
+        CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
+        ;;
     MAKE)
         make -j"$(nproc)"
         make -j"$(nproc)" libcommon.la
