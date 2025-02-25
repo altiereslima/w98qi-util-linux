@@ -88,7 +88,7 @@ for phase in "${PHASES[@]}"; do
             --without-systemd
             --enable-static
             --with-pic
-            --disable-shared
+            --enable-shared
             --enable-static-programs
         )
 
@@ -104,14 +104,16 @@ for phase in "${PHASES[@]}"; do
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        # Build common library first
+        # Build buffer utilities first
+        make -j"$(nproc)" lib/buffer.o
+        # Build common library
         make -j"$(nproc)" libcommon.la
-        # Build other libraries that might depend on libcommon
+        # Build other core libraries
         make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
-        # Build the rest of the project
+        # Build the main project
         make -j"$(nproc)"
-        # Build tests last
-        make -j"$(nproc)" check-programs
+        # Build and link tests with explicit reference to buffer objects
+        LDFLAGS="-L$(pwd)/lib -Wl,--whole-archive lib/buffer.o -lcommon -Wl,--no-whole-archive" make -j"$(nproc)" check-programs
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
