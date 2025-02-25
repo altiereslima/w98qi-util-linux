@@ -24,4 +24,4 @@
         LDFLAGS: "-L$(pwd)/lib"
       run: |
         chmod +x .github/workflows/cibuild.sh
-        .github/workflows/cibuild.sh CONFIGURE MAKE INSTALL
+        .github/workflows/cibuild.sh CONFIGURE MAKE
