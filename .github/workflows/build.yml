@@ -1,0 +1,23 @@
+- name: Install dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y \
+          autoconf \
+          automake \
+          libtool \
+          gettext \
+          pkg-config \
+          libncurses5-dev \
+          libblkid-dev \
+          uuid-dev \
+          zlib1g-dev \
+          libselinux1-dev \
+          libcap-dev
+
+    - name: Build
+      env:
+        COMPILER: gcc
+        SANITIZE: no
+      run: |
+        chmod +x .github/workflows/cibuild.sh
+        .github/workflows/cibuild.sh CONFIGURE MAKE INSTALL
