@@ -22,7 +22,7 @@
         COMPILER_VERSION: 10
         SANITIZE: yes
         CFLAGS: "-O2 -Wall -fPIC"
-        LDFLAGS: "-L$(pwd)/lib -Wl,--no-as-needed"
+        LDFLAGS: "-L$(pwd)/lib -Wl,--whole-archive -lsmartcols -lblkid -luuid -lmount"
       run: |
         chmod +x .github/workflows/cibuild.sh
         sudo -E .github/workflows/cibuild.sh CONFIGURE MAKE CHECK
