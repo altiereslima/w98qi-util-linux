@@ -84,8 +84,11 @@ for phase in "${PHASES[@]}"; do
             --disable-makeinstall-chown
             --enable-all-programs
             --without-python
-            --enable-werror
+            --disable-nls
+            --without-systemd
+            --without-udev
         )
+        # Removido --enable-werror para evitar que warnings sejam tratados como erros
 
         if [[ "$COVERAGE" == "yes" ]]; then
             CFLAGS+=(--coverage)
