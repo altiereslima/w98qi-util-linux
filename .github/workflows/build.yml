@@ -20,8 +20,8 @@
       env:
         COMPILER: gcc
         SANITIZE: no
-        CFLAGS: "-O2 -Wall"
-        LDFLAGS: "-L$(pwd)/lib -Wl,--no-as-needed"
+        CFLAGS: "-O2 -Wall -fPIC"
+        LDFLAGS: "-L$(pwd)/lib -Wl,--no-as-needed -Wl,--whole-archive"
       run: |
         chmod +x .github/workflows/cibuild.sh
         .github/workflows/cibuild.sh CONFIGURE MAKE INSTALL
