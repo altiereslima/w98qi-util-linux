@@ -88,6 +88,8 @@ for phase in "${PHASES[@]}"; do
             --without-systemd
             --enable-static
             --with-pic
+            --disable-shared
+            --enable-static-programs
         )
 
         if [[ "$COVERAGE" == "yes" ]]; then
@@ -102,8 +104,13 @@ for phase in "${PHASES[@]}"; do
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        make -j"$(nproc)"
+        # Build common library first
         make -j"$(nproc)" libcommon.la
+        # Build other libraries that might depend on libcommon
+        make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
+        # Build the rest of the project
+        make -j"$(nproc)"
+        # Build tests last
         make -j"$(nproc)" check-programs
         ;;
     INSTALL)
