@@ -2,7 +2,7 @@
  
 set -ex
 
-PHASES=(${@:-CONFIGURE MAKE INSTALL})
+PHASES=(${@:-CONFIGURE MAKE INSTALL CHECK})
 COMPILER="${COMPILER:?}"
 COMPILER_VERSION="${COMPILER_VERSION}"
 CFLAGS=(-O1 -g)
@@ -86,7 +86,7 @@ for phase in "${PHASES[@]}"; do
             --without-python
             --disable-nls
             --without-systemd
-            --disable-tests        # Add this line to disable test compilation
+            # Remove --disable-tests to allow test compilation
         )
         # Removido --enable-werror para evitar que warnings sejam tratados como erros
 
@@ -115,8 +115,7 @@ for phase in "${PHASES[@]}"; do
         ;;
     MAKE)
         make -j"$(nproc)"
-        # Removing check-programs to avoid test compilation
-        # make -j"$(nproc)" check-programs
+        make -j"$(nproc)" check-programs  # Re-enable this line
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
