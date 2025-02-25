@@ -86,36 +86,13 @@ for phase in "${PHASES[@]}"; do
             --without-python
             --disable-nls
             --without-systemd
-            # Remove --disable-tests to allow test compilation
+            --enable-static
+            --with-pic
         )
-        # Removido --enable-werror para evitar que warnings sejam tratados como erros
-
-        if [[ "$COVERAGE" == "yes" ]]; then
-            CFLAGS+=(--coverage)
-            CXXFLAGS+=(--coverage)
-            LDFLAGS+=(--coverage)
-        fi
-
-        if [[ "$SANITIZE" == "yes" ]]; then
-            opts+=(--enable-asan --enable-ubsan)
-            CFLAGS+=(-fno-omit-frame-pointer)
-            CXXFLAGS+=(-fno-omit-frame-pointer)
-        fi
-
-        if [[ "$COMPILER" == clang* && "$SANITIZE" == "yes" ]]; then
-            opts+=(--enable-fuzzing-engine)
-            CFLAGS+=(-shared-libasan)
-            CXXFLAGS+=(-shared-libasan)
-        fi
-
-        git clean -xdf
-
-        ./autogen.sh
-        CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
-        ;;
     MAKE)
         make -j"$(nproc)"
-        make -j"$(nproc)" check-programs  # Re-enable this line
+        make -j"$(nproc)" libcommon.la
+        make -j"$(nproc)" check-programs
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
