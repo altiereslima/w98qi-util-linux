@@ -2,7 +2,7 @@
  
 set -ex
 
-PHASES=(${@:-CONFIGURE MAKE INSTALL CHECK})
+PHASES=(${@:-CONFIGURE MAKE INSTALL CHECK DISTCHECK})
 COMPILER="${COMPILER:?}"
 COMPILER_VERSION="${COMPILER_VERSION}"
 CFLAGS=(-O1 -g)
@@ -82,26 +82,37 @@ for phase in "${PHASES[@]}"; do
         opts=(
             --disable-use-tty-group
             --disable-makeinstall-chown
-            --disable-all-programs
-            --enable-cfdisk
+            --enable-all-programs
             --without-python
-            --disable-nls
-            --without-systemd
-            --enable-static
-            --with-pic
-            --enable-shared
+            --enable-werror
         )
 
+        if [[ "$COVERAGE" == "yes" ]]; then
+            CFLAGS+=(--coverage)
+            CXXFLAGS+=(--coverage)
+            LDFLAGS+=(--coverage)
+        fi
+
+        if [[ "$SANITIZE" == "yes" ]]; then
+            opts+=(--enable-asan --enable-ubsan)
+            CFLAGS+=(-fno-omit-frame-pointer)
+            CXXFLAGS+=(-fno-omit-frame-pointer)
+        fi
+
+        if [[ "$COMPILER" == clang* && "$SANITIZE" == "yes" ]]; then
+            opts+=(--enable-fuzzing-engine)
+            CFLAGS+=(-shared-libasan)
+            CXXFLAGS+=(-shared-libasan)
+        fi
+
         git clean -xdf
+
         ./autogen.sh
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        # Build core libraries first
-        make -j"$(nproc)" lib/libcommon.la
-        make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
-        # Build cfdisk
-        make -j"$(nproc)" disk-utils/cfdisk
+        make -j"$(nproc)"
+        make -j"$(nproc)" check-programs
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest

@@ -40,14 +40,6 @@ jobs:
         run: sudo -E .github/workflows/cibuild.sh CHECK
       - name: Make install
         run: .github/workflows/cibuild.sh INSTALL
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: util-linux-${{ matrix.env.COMPILER }}-${{ matrix.env.COMPILER_VERSION }}
-          path: |
-            ./build/**/*.so
-            ./build/**/*.a
-            ./build/**/bin/*
   coveralls:
     permissions:
       contents: read # to fetch code (actions/checkout)
