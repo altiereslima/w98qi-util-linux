@@ -84,6 +84,7 @@ for phase in "${PHASES[@]}"; do
             --disable-makeinstall-chown
             --enable-all-programs
             --without-python
+            --enable-static
             # --enable-werror
         )
 
