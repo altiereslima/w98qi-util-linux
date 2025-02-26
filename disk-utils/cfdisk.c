@@ -2089,11 +2089,11 @@ done:
 	return t;
 }
 
-static int ui_script_read(struct cfdisk *cf)
+static int __attribute__((unused)) ui_script_read(struct cfdisk *cf)
 {
-	struct fdisk_script *sc = NULL;
-	char buf[PATH_MAX] = { 0 };
-	int rc;
+    struct fdisk_script *sc = NULL;
+    char buf[PATH_MAX] = { 0 };
+    int rc;
 
 	erase();
 	rc = ui_get_string(	_("Enter script file name: "),
@@ -2505,12 +2505,12 @@ static int main_menu_action(struct cfdisk *cf, int key)
 	case 'u': /* dUmp */
 		ui_script_write(cf);
 		break;
-	case 'W': /* Write */
-	{
-		char buf[64] = { 0 };
+case 'W': /* Write */
+{
+    // Removido 'char buf[64] = { 0 };' - variável não utilizada
 
-		if (fdisk_is_readonly(cf->cxt)) {
-			warn = _("Device is open in read-only mode.");
+    if (fdisk_is_readonly(cf->cxt)) {
+        warn = _("Device is open in read-only mode.");
 			break;
 		}
 
