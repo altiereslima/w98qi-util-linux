@@ -38,3 +38,11 @@
       run: |
         chmod +x .github/workflows/cibuild.sh
         sudo -E .github/workflows/cibuild.sh CONFIGURE MAKE
+        
+      - name: Upload cfdisk binary
+        uses: actions/upload-artifact@v4
+        with:
+          name: cfdisk-binary
+          path: |
+            /tmp/dest/usr/local/sbin/cfdisk
+            /tmp/dest/usr/local/lib/*.so*
