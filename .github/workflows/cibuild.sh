@@ -88,9 +88,10 @@ for phase in "${PHASES[@]}"; do
             --without-systemd
             --enable-static
             --with-pic
-            --enable-shared
+            --disable-shared
             --enable-static-programs
-            --enable-libbuffer
+        )
+        --enable-libbuffer
         )
 
         if [[ "$COVERAGE" == "yes" ]]; then
@@ -105,15 +106,16 @@ for phase in "${PHASES[@]}"; do
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        # Build buffer and common libraries first
-        make -j"$(nproc)" lib/libbuffer.la
-        make -j"$(nproc)" libcommon.la
-        # Build other core libraries
-        make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
-        # Build the main project
+        # Build the libraries in correct order
+        make -j"$(nproc)" lib/buffer.o
+        make -j"$(nproc)" lib/libcommon.la
+        
+        # Build the main project with specific linking
+        LDFLAGS="-L$(pwd)/lib -Wl,--start-group lib/buffer.o -lcommon -Wl,--end-group" \
         make -j"$(nproc)"
-        # Build tests with proper linking
-        LDFLAGS="-L$(pwd)/lib -Wl,--whole-archive -lbuffer -lcommon -lblkid -luuid -lmount -lsmartcols -Wl,--no-whole-archive" \
+        
+        # Build tests with explicit linking
+        LDFLAGS="-L$(pwd)/lib -Wl,--start-group lib/buffer.o -lcommon -lblkid -luuid -lmount -lsmartcols -Wl,--end-group" \
         make -j"$(nproc)" check-programs
         ;;
     INSTALL)
