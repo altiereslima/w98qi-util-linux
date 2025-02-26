@@ -28,7 +28,11 @@ jobs:
           - { COMPILER: "gcc",   COMPILER_VERSION: "10", SANITIZE: "no"   }
           - { COMPILER: "clang", COMPILER_VERSION: "15", SANITIZE: "yes"  }
           - { COMPILER: "clang", COMPILER_VERSION: "15", SANITIZE: "no"   }
-    env: ${{ matrix.env }}
+    env:
+      COMPILER: ${{ matrix.env.COMPILER }}
+      COMPILER_VERSION: ${{ matrix.env.COMPILER_VERSION }}
+      SANITIZE: ${{ matrix.env.SANITIZE }}
+      CFLAGS: "-Wno-error=unused-variable -Wno-error=unused-function"
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
@@ -44,7 +48,6 @@ jobs:
     permissions:
       contents: read # to fetch code (actions/checkout)
       checks: write # to create new checks (coverallsapp/github-action)
-
     runs-on: ubuntu-latest
     if: github.repository == 'util-linux/util-linux'
     env:
