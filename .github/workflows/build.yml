@@ -31,15 +31,13 @@
       env:
         COMPILER: gcc
         COMPILER_VERSION: 10
-        SANITIZE: yes
-        CFLAGS: "-O2 -Wall -fPIC -I$(pwd)/include"
-        LDFLAGS: "-L$(pwd)/lib -Wl,--whole-archive -Wl,--start-group -lcommon -lsmartcols -lblkid -luuid -lmount -Wl,--end-group -Wl,--no-whole-archive"
-        PKG_CONFIG_PATH: "$(pwd)/lib/pkgconfig"
+        SANITIZE: no
+        CFLAGS: "-O2 -Wall -fPIC"
       run: |
         chmod +x .github/workflows/cibuild.sh
         ./autogen.sh
-        ./configure --enable-static
-        make -j$(nproc)
+        ./configure --enable-static --enable-all-programs
+        make -j$(nproc) disk-utils/cfdisk
         sudo make install DESTDIR=/tmp/dest
 
     - name: Upload cfdisk binary
@@ -47,5 +45,6 @@
       with:
         name: cfdisk-binary
         path: |
+          disk-utils/cfdisk
           /tmp/dest/usr/local/sbin/cfdisk
           /tmp/dest/usr/local/lib/*.so*
