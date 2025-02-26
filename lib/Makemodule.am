@@ -224,7 +224,8 @@ test_loopdev_SOURCES = lib/loopdev.c \
 		       lib/linux_version.c \
 		       $(test_sysfs_SOURCES) \
 		       $(test_canonicalize_SOURCES)
-test_loopdev_CFLAGS = $(AM_CFLAGS) -DTEST_PROGRAM_LOOPDEV
+test_loopdev_CFLAGS = $(AM_CFLAGS) -DTEST_PROGRAM_LOOPDEV -I$(ul_libsmartcols_incdir)
+test_loopdev_LDADD = $(LDADD) libsmartcols.la
 endif
 
 
