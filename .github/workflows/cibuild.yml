@@ -20,6 +20,10 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      COMPILER: gcc
+      COMPILER_VERSION: 10
+      SANITIZE: no
     steps:
       - uses: actions/checkout@v1
       - name: Ubuntu setup
