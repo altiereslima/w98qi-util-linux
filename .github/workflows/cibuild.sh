@@ -90,6 +90,7 @@ for phase in "${PHASES[@]}"; do
             --with-pic
             --enable-shared
             --enable-static-programs
+            --enable-libbuffer
         )
 
         if [[ "$COVERAGE" == "yes" ]]; then
@@ -104,16 +105,16 @@ for phase in "${PHASES[@]}"; do
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        # Build buffer utilities first
-        make -j"$(nproc)" lib/buffer.o
-        # Build common library
+        # Build buffer and common libraries first
+        make -j"$(nproc)" lib/libbuffer.la
         make -j"$(nproc)" libcommon.la
         # Build other core libraries
         make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
         # Build the main project
         make -j"$(nproc)"
-        # Build and link tests with explicit reference to buffer objects
-        LDFLAGS="-L$(pwd)/lib -Wl,--whole-archive lib/buffer.o -lcommon -Wl,--no-whole-archive" make -j"$(nproc)" check-programs
+        # Build tests with proper linking
+        LDFLAGS="-L$(pwd)/lib -Wl,--whole-archive -lbuffer -lcommon -lblkid -luuid -lmount -lsmartcols -Wl,--no-whole-archive" \
+        make -j"$(nproc)" check-programs
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
