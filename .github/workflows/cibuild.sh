@@ -7,15 +7,6 @@ COMPILER="${COMPILER:?}"
 COMPILER_VERSION="${COMPILER_VERSION}"
 CFLAGS=(-O1 -g)
 CXXFLAGS=(-O1 -g)
-# Remover a opção -Werror para evitar que avisos sejam tratados como erros
-opts=(
-    --disable-use-tty-group
-    --disable-makeinstall-chown
-    --enable-all-programs
-    --without-python
-    # Remover --enable-werror ou adicionar uma opção para desativar -Werror
-    # --enable-werror
-)
 LDFLAGS=()
 COVERITY_SCAN_TOOL_BASE="/tmp/coverity-scan-analysis"
 
