@@ -84,13 +84,9 @@ for phase in "${PHASES[@]}"; do
             --disable-makeinstall-chown
             --enable-all-programs
             --without-python
-            --enable-static
-            --disable-shared
-            # --enable-werror
+            --enable-werror
         )
 
-        # Adicionar flags de linking necessárias
-        LDFLAGS+=(-L$(pwd)/lib -lcommon)
         if [[ "$COVERAGE" == "yes" ]]; then
             CFLAGS+=(--coverage)
             CXXFLAGS+=(--coverage)
