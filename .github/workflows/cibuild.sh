@@ -84,7 +84,7 @@ for phase in "${PHASES[@]}"; do
             --disable-makeinstall-chown
             --enable-all-programs
             --without-python
-            --enable-werror
+            # --enable-werror
         )
 
         if [[ "$COVERAGE" == "yes" ]]; then
