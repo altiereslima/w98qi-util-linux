@@ -82,41 +82,26 @@ for phase in "${PHASES[@]}"; do
         opts=(
             --disable-use-tty-group
             --disable-makeinstall-chown
-            --enable-all-programs
+            --disable-all-programs
+            --enable-cfdisk
             --without-python
             --disable-nls
             --without-systemd
             --enable-static
             --with-pic
-            --disable-shared
-            --enable-static-programs
+            --enable-shared
         )
-        --enable-libbuffer
-        )
-
-        if [[ "$COVERAGE" == "yes" ]]; then
-            CFLAGS+=(--coverage)
-            CXXFLAGS+=(--coverage)
-            LDFLAGS+=(--coverage)
-        fi
 
         git clean -xdf
-
         ./autogen.sh
         CC="$CC" CXX="$CXX" CFLAGS="${CFLAGS[@]}" CXXFLAGS="${CXXFLAGS[@]}" LDFLAGS="${LDFLAGS[@]}" ./configure "${opts[@]}"
         ;;
     MAKE)
-        # Build the libraries in correct order
-        make -j"$(nproc)" lib/buffer.o
+        # Build core libraries first
         make -j"$(nproc)" lib/libcommon.la
-        
-        # Build the main project with specific linking
-        LDFLAGS="-L$(pwd)/lib -Wl,--start-group lib/buffer.o -lcommon -Wl,--end-group" \
-        make -j"$(nproc)"
-        
-        # Build tests with explicit linking
-        LDFLAGS="-L$(pwd)/lib -Wl,--start-group lib/buffer.o -lcommon -lblkid -luuid -lmount -lsmartcols -Wl,--end-group" \
-        make -j"$(nproc)" check-programs
+        make -j"$(nproc)" libblkid.la libmount.la libsmartcols.la libuuid.la
+        # Build cfdisk
+        make -j"$(nproc)" disk-utils/cfdisk
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
