@@ -2,9 +2,9 @@ name: Windows 98 QuickInstall Build
 on:
   push:
     branches:
-      - 'master'
-      - 'main'
-  workflow_dispatch:
+      - '*'  # Executar em qualquer branch
+  pull_request:
+  workflow_dispatch:  # Permitir execução manual
 
 jobs:
   build:
@@ -36,7 +36,7 @@ jobs:
           strip -s artifacts/bin/cfdisk
       
       - name: Upload artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: w98qi-cfdisk
           path: artifacts/bin/cfdisk
