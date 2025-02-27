@@ -24,18 +24,22 @@ jobs:
       COMPILER: gcc
       COMPILER_VERSION: 10
       SANITIZE: no
-      CFLAGS: "-O0 -g3"
+      CFLAGS: "-m32 -O1"
+      LDFLAGS: "-m32"
     steps:
       - uses: actions/checkout@v1
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
-      - name: Install ncurses
-        run: sudo apt-get install -y libncursesw5-dev
+      - name: Install 32-bit dependencies
+        run: |
+          sudo dpkg --add-architecture i386
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib libc6-dev-i386 libncursesw5-dev:i386 libtinfo-dev:i386
       - name: Configure & Make
         run: |
           ./autogen.sh
-          ./configure --enable-static --disable-shared --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python --disable-makeinstall-chown --disable-use-tty-group --disable-strip
-          make V=1 LDFLAGS="-static" CFLAGS="-O0 -g3"
+          ./configure --host=i386-linux-gnu --build=i386-linux-gnu --enable-static --disable-shared --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python --disable-makeinstall-chown --disable-use-tty-group --disable-strip
+          make V=1 LDFLAGS="-m32 -static" CFLAGS="-m32 -O1"
       - name: Make install
         run: sudo make install DESTDIR=/tmp/dest
       - name: Create artifact directory
@@ -47,25 +51,3 @@ jobs:
         with:
           name: util-linux-binaries
           path: artifacts/
-  build-s390x:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Repository checkout
-        uses: actions/checkout@v1
-      - uses: uraimo/run-on-arch-action@v2
-        with:
-          arch: s390x
-          distro: ubuntu_latest
-          run: |
-            export COMPILER=gcc
-            export COMPILER_VERSION=10
-            export SANITIZE=no
-            export QEMU_USER=1
-            
-            # name: Ubuntu setup
-            .github/workflows/cibuild-setup-ubuntu.sh
-            git config --global --add safe.directory "$PWD"
-            # Configure & Make
-            .github/workflows/cibuild.sh CONFIGURE MAKE
-            # Check
-            .github/workflows/cibuild.sh CHECK
