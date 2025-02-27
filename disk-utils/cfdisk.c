@@ -2089,7 +2089,7 @@ done:
 	return t;
 }
 
-static int ui_script_read(struct cfdisk *cf)
+static int __attribute__((unused)) ui_script_read(struct cfdisk *cf)
 {
 	struct fdisk_script *sc = NULL;
 	char buf[PATH_MAX] = { 0 };
@@ -2507,7 +2507,7 @@ static int main_menu_action(struct cfdisk *cf, int key)
         break;
     case 'W': /* Write */
     {
-        /* Remove: char buf[64] = { 0 }; -- not used anymore due to W98QI hack */
+        // Removido 'char buf[64] = { 0 };' - variável não utilizada
 
         if (fdisk_is_readonly(cf->cxt)) {
             warn = _("O dispositivo est� aberto no modo somente leitura.");
