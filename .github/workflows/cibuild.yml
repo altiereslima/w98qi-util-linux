@@ -39,15 +39,15 @@ jobs:
         run: |
           ./autogen.sh
           ./configure --host=i386-linux-gnu --build=i386-linux-gnu --enable-static --disable-shared --without-python --disable-makeinstall-chown --disable-use-tty-group --disable-strip --disable-login --disable-su --disable-sulogin --disable-nologin --disable-lslogins --without-systemd --enable-libfdisk --enable-libsmartcols --enable-libuuid --enable-libblkid --enable-libmount
-          make V=1 LDFLAGS="-m32 -static" CFLAGS="-m32 -O1" fdisk cfdisk sfdisk
-          find . -name "fdisk" -o -name "cfdisk" -o -name "sfdisk" | xargs ls -la
+          make V=1 LDFLAGS="-m32 -static -s" CFLAGS="-m32 -O1 -fno-stack-protector -fno-pie" cfdisk
+      - name: Find binaries
+        run: |
+          find . -name "cfdisk" -type f -executable
       - name: Make install binaries
         run: |
           sudo mkdir -p /tmp/dest/usr/sbin/
-          sudo find . -name "fdisk" -type f -executable -exec cp -v {} /tmp/dest/usr/sbin/ \;
           sudo find . -name "cfdisk" -type f -executable -exec cp -v {} /tmp/dest/usr/sbin/ \;
-          sudo find . -name "sfdisk" -type f -executable -exec cp -v {} /tmp/dest/usr/sbin/ \;
-          sudo chmod 755 /tmp/dest/usr/sbin/fdisk /tmp/dest/usr/sbin/cfdisk /tmp/dest/usr/sbin/sfdisk
+          sudo chmod 755 /tmp/dest/usr/sbin/cfdisk
       - name: Make install
         run: sudo make install DESTDIR=/tmp/dest
       - name: Create artifact directory
