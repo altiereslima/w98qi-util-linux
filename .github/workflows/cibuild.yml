@@ -34,7 +34,7 @@ jobs:
       - name: Configure & Make
         run: |
           ./autogen.sh
-          ./configure --enable-static --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python
+          ./configure --enable-static --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python --disable-makeinstall-chown --disable-use-tty-group
           make V=1
       - name: Make install
         run: make install DESTDIR=/tmp/dest
