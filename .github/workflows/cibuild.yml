@@ -42,9 +42,11 @@ jobs:
           make V=1 LDFLAGS="-m32 -static" CFLAGS="-m32 -O1" fdisk cfdisk sfdisk
       - name: Make install binaries
         run: |
-          sudo install -D -m755 fdisk/fdisk /tmp/dest/usr/sbin/fdisk
-          sudo install -D -m755 fdisk/cfdisk /tmp/dest/usr/sbin/cfdisk
-          sudo install -D -m755 fdisk/sfdisk /tmp/dest/usr/sbin/sfdisk
+          sudo mkdir -p /tmp/dest/usr/sbin/
+          sudo cp -v ./fdisk/.libs/fdisk /tmp/dest/usr/sbin/
+          sudo cp -v ./fdisk/.libs/cfdisk /tmp/dest/usr/sbin/
+          sudo cp -v ./fdisk/.libs/sfdisk /tmp/dest/usr/sbin/
+          sudo chmod 755 /tmp/dest/usr/sbin/fdisk /tmp/dest/usr/sbin/cfdisk /tmp/dest/usr/sbin/sfdisk
       - name: Make install
         run: sudo make install DESTDIR=/tmp/dest
       - name: Create artifact directory
