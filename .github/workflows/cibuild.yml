@@ -37,7 +37,7 @@ jobs:
           ./configure --enable-static --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python --disable-makeinstall-chown --disable-use-tty-group
           make V=1
       - name: Make install
-        run: make install DESTDIR=/tmp/dest
+        run: sudo make install DESTDIR=/tmp/dest
       - name: Create artifact directory
         run: |
           mkdir -p artifacts
