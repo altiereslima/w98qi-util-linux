@@ -1,0 +1,42 @@
+name: Windows 98 QuickInstall Build
+on:
+  push:
+    branches:
+      - 'master'
+      - 'main'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib libc6-dev-i386 libncurses5-dev:i386 libncursesw5-dev:i386 libtinfo-dev:i386
+      
+      - name: Configure & Build
+        run: |
+          ./autogen.sh
+          ./configure --host=i386-linux-gnu --build=i386-linux-gnu \
+            --enable-static --disable-shared \
+            --without-python --disable-makeinstall-chown \
+            --disable-use-tty-group --disable-strip \
+            --disable-login --disable-su --disable-sulogin \
+            --disable-nologin --disable-lslogins --without-systemd
+          
+          make V=1 LDFLAGS="-m32 -static -s" CFLAGS="-m32 -O1 -fno-stack-protector -fno-pie -fno-asynchronous-unwind-tables" disk-utils/cfdisk
+      
+      - name: Create artifact directory
+        run: |
+          mkdir -p artifacts/bin
+          cp -v disk-utils/cfdisk artifacts/bin/
+          strip -s artifacts/bin/cfdisk
+      
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: w98qi-cfdisk
+          path: artifacts/bin/cfdisk
