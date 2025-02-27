@@ -34,12 +34,12 @@ jobs:
         run: |
           sudo dpkg --add-architecture i386
           sudo apt-get update
-          sudo apt-get install -y gcc-multilib g++-multilib libc6-dev-i386 libncursesw5-dev:i386 libtinfo-dev:i386
+          sudo apt-get install -y gcc-multilib g++-multilib libc6-dev-i386 libncursesw5-dev:i386 libtinfo-dev:i386 libpam0g-dev:i386 libpam-modules:i386
       - name: Configure & Make
         run: |
           ./autogen.sh
-          ./configure --host=i386-linux-gnu --build=i386-linux-gnu --enable-static --disable-shared --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo --without-python --disable-makeinstall-chown --disable-use-tty-group --disable-strip
-          make V=1 LDFLAGS="-m32 -static" CFLAGS="-m32 -O1"
+          ./configure --host=i386-linux-gnu --build=i386-linux-gnu --enable-static --disable-shared --without-python --disable-makeinstall-chown --disable-use-tty-group --disable-strip --disable-login --disable-su --disable-sulogin --disable-nologin --enable-libfdisk --enable-libsmartcols --enable-libuuid --enable-libblkid --enable-libmount
+          make V=1 LDFLAGS="-m32 -static" CFLAGS="-m32 -O1" fdisk cfdisk sfdisk
       - name: Make install
         run: sudo make install DESTDIR=/tmp/dest
       - name: Create artifact directory
