@@ -29,10 +29,12 @@ jobs:
       - uses: actions/checkout@v1
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
+      - name: Install ncurses
+        run: sudo apt-get install -y libncursesw5-dev
       - name: Configure & Make
         run: |
           ./autogen.sh
-          ./configure --enable-static --disable-shared --enable-all-programs --enable-static-programs --with-ncurses --with-tinfo --with-slang --enable-widechar
+          ./configure --enable-static --disable-shared --enable-all-programs --enable-static-programs --with-ncursesw --with-tinfo
           make V=1
       - name: Make install
         run: make install DESTDIR=/tmp/dest
