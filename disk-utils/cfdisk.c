@@ -198,16 +198,16 @@ struct cfdisk_menu {
 
 /* main menu */
 static struct cfdisk_menuitem main_menuitems[] = {
-	{ 'b', N_("Bootable"), N_("Toggle bootable flag of the current partition") },
-	{ 'd', N_("Delete"), N_("Delete the current partition") },
-	{ 'r', N_("Resize"), N_("Reduce or enlarge the current partition") },
-	{ 'n', N_("New"), N_("Create new partition from free space") },
-	{ 'q', N_("Quit"), N_("Quit program without writing changes") },
-	{ 't', N_("Type"), N_("Change the partition type") },
-	{ 'h', N_("Help"), N_("Print help screen") },
-	{ 's', N_("Sort"), N_("Fix partitions order") },
-	{ 'W', N_("Write"), N_("Write partition table to disk (this might destroy data)") },
-	{ 'u', N_("Dump"), N_("Dump partition table to sfdisk compatible script file") },
+	{ 'b', N_("Inicializï¿½vel"), N_("Alternar o status de inicializï¿½vel da partiï¿½ï¿½o atual") },
+	{ 'd', N_("Excluir"), N_("Excluir a partiï¿½ï¿½o atual") },
+	{ 'r', N_("Redimensionar"), N_("Reduzir ou aumentar o tamanho da partiï¿½ï¿½o atual") },
+	{ 'n', N_("Nova"), N_("Criar nova partiï¿½ï¿½o a partir do espaï¿½o livre") },
+	{ 'q', N_("Sair"), N_("Sair do programa sem salvar as alteraï¿½ï¿½es") },
+	{ 't', N_("Tipo"), N_("Alterar o tipo da partiï¿½ï¿½o") },
+	{ 'h', N_("Ajuda"), N_("Exibir a tela de ajuda") },
+	{ 's', N_("Ordenar"), N_("Corrigir a ordem das partiï¿½ï¿½es") },
+	{ 'W', N_("Salvar"), N_("Salvar a tabela de partiï¿½ï¿½es no disco (isso pode destruir dados)") },
+	{ 'u', N_("Exportar"), N_("Exportar a tabela de partiï¿½ï¿½es para um script compatï¿½vel com sfdisk") },
 	{ 0, NULL, NULL }
 };
 
@@ -1318,7 +1318,7 @@ static char *get_mountpoint(struct cfdisk *cf, const char *tagname, const char *
 
 	if (fs) {
 		if (mounted)
-			xasprintf(&target, _("%s (mounted)"), mnt_fs_get_target(fs));
+			xasprintf(&target, _("%s (montado)"), mnt_fs_get_target(fs));
 		else
 			target = xstrdup(mnt_fs_get_target(fs));
 	}
@@ -1366,14 +1366,14 @@ static void extra_prepare_data(struct cfdisk *cf)
 
 	/* string data should not equal an empty string */
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_NAME, &data) && data) {
-		extra_insert_pair(l, _("Partition name:"), data);
+		extra_insert_pair(l, _("Nome da partiï¿½ï¿½o:"), data);
 		if (!mountpoint)
 			mountpoint = get_mountpoint(cf, "PARTLABEL", data);
 		free(data);
 	}
 
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_UUID, &data) && data) {
-		extra_insert_pair(l, _("Partition UUID:"), data);
+		extra_insert_pair(l, _("UUID da partiï¿½ï¿½o:"), data);
 
 		/* Search for mountpoint by PARTUUID= means that we need to
 		 * check fstab and convert PARTUUID to the device name. This is
@@ -1392,14 +1392,14 @@ static void extra_prepare_data(struct cfdisk *cf)
 		fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_TYPEID, &code);
 		xasprintf(&type, "%s (%s)", data, code);
 
-		extra_insert_pair(l, _("Partition type:"), type);
+		extra_insert_pair(l, _("Tipo de partiï¿½ï¿½o:"), type);
 		free(data);
 		free(code);
 		free(type);
 	}
 
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_ATTR, &data) && data) {
-		extra_insert_pair(l, _("Attributes:"), data);
+		extra_insert_pair(l, _("Atributos:"), data);
 		free(data);
 	}
 
@@ -1423,20 +1423,20 @@ static void extra_prepare_data(struct cfdisk *cf)
 	}
 
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_FSUUID, &data) && data) {
-		extra_insert_pair(l, _("Filesystem UUID:"), data);
+		extra_insert_pair(l, _("UUID sist. arquivos:"), data);
 		if (!mountpoint)
 			mountpoint = get_mountpoint(cf, "UUID", data);
 		free(data);
 	}
 
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_FSLABEL, &data) && data) {
-		extra_insert_pair(l, _("Filesystem LABEL:"), data);
+		extra_insert_pair(l, _("Rï¿½TULO sist. arquivos:"), data);
 		if (!mountpoint)
-			mountpoint = get_mountpoint(cf, "LABEL", data);
+			mountpoint = get_mountpoint(cf, "Rï¿½TULO", data);
 		free(data);
 	}
 	if (!fdisk_partition_to_string(pa, cf->cxt, FDISK_FIELD_FSTYPE, &data) && data) {
-		extra_insert_pair(l, _("Filesystem:"), data);
+		extra_insert_pair(l, _("Sist. arquivos:"), data);
 		free(data);
 	}
 
@@ -1785,15 +1785,15 @@ static int ui_refresh(struct cfdisk *cf)
 
 	/* header */
 	attron(A_BOLD);
-	ui_center(0, _("Disk: %s"), fdisk_get_devname(cf->cxt));
+	ui_center(0, _("Disco: %s"), fdisk_get_devname(cf->cxt));
 	attroff(A_BOLD);
-	ui_center(1, _("Size: %s, %"PRIu64" bytes, %ju sectors"),
+	ui_center(1, _("Tamanho: %s, %"PRIu64" bytes, %ju sectors"),
 			strsz, bytes, (uintmax_t) fdisk_get_nsectors(cf->cxt));
 	if (fdisk_get_disklabel_id(cf->cxt, &id) == 0 && id)
-		ui_center(2, _("Label: %s, identifier: %s"),
+		ui_center(2, _("Rï¿½tulo: %s, identifier: %s"),
 				fdisk_label_get_name(lb), id);
 	else
-		ui_center(2, _("Label: %s"), fdisk_label_get_name(lb));
+		ui_center(2, _("Rï¿½tulo: %s"), fdisk_label_get_name(lb));
 	free(strsz);
 	free(id);
 
@@ -1944,13 +1944,13 @@ static int ui_get_size(struct cfdisk *cf,	/* context */
 		int pwr = 0, insec = 0;
 
 		rc = ui_get_string(prompt,
-				_("May be followed by M for MiB, G for GiB, "
-				  "T for TiB, or S for sectors."),
+				_("Pode ser seguido por M para MiB, G para GiB, "
+				  "T para TiB, ou S para setores."),
 				buf, sizeof(buf));
 		ui_clean_warn();
 
 		if (rc == 0) {
-			ui_warnx(_("Please, specify size."));
+			ui_warnx(_("Por favor, especifique o tamanho."));
 			continue;			/* nothing specified */
 		} if (rc == -CFDISK_ERR_ESC)
 			break;				/* cancel dialog */
@@ -1972,7 +1972,7 @@ static int ui_get_size(struct cfdisk *cf,	/* context */
 			if (insec)
 				user *= fdisk_get_sector_size(cf->cxt);
 			if (user < low) {
-				ui_warnx(_("Minimum size is %"PRIu64" bytes."), low);
+				ui_warnx(_("O tamanho mï¿½nimo ï¿½ %"PRIu64" bytes."), low);
 				rc = -ERANGE;
 			}
 			if (user > up && pwr && user < up + (1ULL << pwr * 10))
@@ -1981,14 +1981,14 @@ static int ui_get_size(struct cfdisk *cf,	/* context */
 				user = up;
 
 			if (user > up) {
-				ui_warnx(_("Maximum size is %"PRIu64" bytes."), up);
+				ui_warnx(_("O tamanho mï¿½ximo ï¿½ %"PRIu64" bytes."), up);
 				rc = -ERANGE;
 			}
 			if (rc == 0 && insec && expsize)
 				*expsize = 1;
 
 		} else
-			ui_warnx(_("Failed to parse size."));
+			ui_warnx(_("Falha ao analisar o tamanho."));
 	} while (rc != 0);
 
 	if (rc == 0)
@@ -2046,7 +2046,7 @@ static struct fdisk_parttype *ui_get_parttype(struct cfdisk *cf,
 	menu_push(cf, cm);
 	cf->menu->vertical = 1;
 	cf->menu->idx = idx;
-	menu_set_title(cf->menu, _("Select partition type"));
+	menu_set_title(cf->menu, _("Selecionar o tipo de partiï¿½ï¿½o"));
 	ui_draw_menu(cf);
 	refresh();
 
@@ -2084,20 +2084,20 @@ done:
 			free((char *) cm[i].name);
 	}
 	free(cm);
-	DBG(UI, ul_debug("get parrtype done [type=%s] ", t ?
+	DBG(UI, ul_debug("tipo de partiï¿½ï¿½o obtido [type=%s] ", t ? 
 				fdisk_parttype_get_name(t) : ""));
 	return t;
 }
 
 static int __attribute__((unused)) ui_script_read(struct cfdisk *cf)
 {
-    struct fdisk_script *sc = NULL;
-    char buf[PATH_MAX] = { 0 };
-    int rc;
+	struct fdisk_script *sc = NULL;
+	char buf[PATH_MAX] = { 0 };
+	int rc;
 
 	erase();
-	rc = ui_get_string(	_("Enter script file name: "),
-				_("The script file will be applied to in-memory partition table."),
+	rc = ui_get_string(	_("Digite o nome do arquivo de script: "),
+				_("O arquivo de script serï¿½ aplicado ï¿½ tabela de partiï¿½ï¿½es na memï¿½ria."),
 				buf, sizeof(buf));
 	if (rc <= 0)
 		return rc;
@@ -2106,11 +2106,11 @@ static int __attribute__((unused)) ui_script_read(struct cfdisk *cf)
 	errno = 0;
 	sc = fdisk_new_script_from_file(cf->cxt, buf);
 	if (!sc && errno)
-		ui_warn(_("Cannot open %s"), buf);
+		ui_warn(_("Nï¿½o ï¿½ possï¿½vel abrir %s"), buf);
 	else if (!sc)
-		ui_warnx(_("Failed to parse script file %s"), buf);
+		ui_warnx(_("Falha ao analisar o arquivo de script %s"), buf);
 	else if (fdisk_apply_script(cf->cxt, sc) != 0)
-		ui_warnx(_("Failed to apply script %s"), buf);
+		ui_warnx(_("Falha ao aplicar o script %s"), buf);
 	else
 		rc = 0;
 
@@ -2126,8 +2126,8 @@ static int ui_script_write(struct cfdisk *cf)
 	FILE *f = NULL;
 	int rc;
 
-	rc = ui_get_string(	_("Enter script file name: "),
-				_("The current in-memory partition table will be dumped to the file."),
+	rc = ui_get_string(	_("Digite o nome do arquivo de script: "),
+				_("A tabela de partiï¿½ï¿½es atual na memï¿½ria serï¿½ exportada para o arquivo."),
 				buf, sizeof(buf));
 	if (rc <= 0)
 		return rc;
@@ -2135,30 +2135,30 @@ static int ui_script_write(struct cfdisk *cf)
 	rc = 0;
 	sc = fdisk_new_script(cf->cxt);
 	if (!sc) {
-		ui_warn(_("Failed to allocate script handler"));
+		ui_warn(_("Falha ao alocar o manipulador de script"));
 		goto done;
 	}
 
 	rc = fdisk_script_read_context(sc, NULL);
 	if (rc) {
-		ui_warnx(_("Failed to read disk layout into script."));
+		ui_warnx(_("Falha ao ler o layout do disco no script."));
 		goto done;
 	}
 
-	DBG(UI, ul_debug("writing dump into: '%s'", buf));
+	DBG(UI, ul_debug("escrevendo exportaï¿½ï¿½o em: '%s'", buf));
 	f = fopen(buf, "w");
 	if (!f) {
-		ui_warn(_("Cannot open %s"), buf);
+		ui_warn(_("Nï¿½o ï¿½ possï¿½vel abrir %s"), buf);
 		rc = -errno;
 		goto done;
 	}
 
 	rc = fdisk_script_write_file(sc, f);
 	if (!rc)
-		ui_info(_("Disk layout successfully dumped."));
+		ui_info(_("Layout do disco exportado com sucesso."));
 done:
 	if (rc)
-		ui_warn(_("Failed to write script %s"), buf);
+		ui_warn(_("Falha ao escrever o script %s"), buf);
 	if (f)
 		fclose(f);
 	fdisk_unref_script(sc);
@@ -2196,10 +2196,10 @@ static int ui_create_label(struct cfdisk *cf)
 	cf->menu->vertical = 1;
 
 	/* Win98QI hack: It looks like a menu. But it's hacked to really be a confirmation dialog... */
-	menu_set_title(cf->menu, "No partition table found. Will create MBR disk!");
+	menu_set_title(cf->menu, "Nenhuma tabela de partiï¿½ï¿½o encontrada. Serï¿½ criado um disco MBR!");
 
 	if (!cf->zero_start)
-		ui_info("Device does not contain a recognized partition table.");
+		ui_info("O dispositivo nï¿½o contï¿½m uma tabela de partiï¿½ï¿½es reconhecida.");
 
 
 	while (!sig_die) {
@@ -2207,7 +2207,7 @@ static int ui_create_label(struct cfdisk *cf)
 
 		if (refresh_menu) {
 			ui_draw_menu(cf);
-			ui_hint("Press ENTER to confirm or Q to quit."); /* W98QI only supports these here.. */
+			ui_hint("Pressione ENTER para confirmar ou Q para sair."); /* W98QI only supports these here. */
 			refresh();
 			refresh_menu = 0;
 		}
@@ -2249,7 +2249,7 @@ static int ui_create_label(struct cfdisk *cf)
 done:
 	menu_pop(cf);
 	free(cm);
-	DBG(UI, ul_debug("create label done [rc=%d] ", rc));
+	DBG(UI, ul_debug("criaï¿½ï¿½o de rï¿½tulo feita [rc=%d] ", rc));
 	return rc;
 }
 
@@ -2258,33 +2258,33 @@ static int ui_help(void)
 {
 	size_t i;
 	static const char *help[] = {
-		N_("This is cfdisk, a curses-based disk partitioning program."),
-		N_("It lets you create, delete, and modify partitions on a block device."),
+		N_("Este ï¿½ o cfdisk, um programa de particionamento de disco baseado em curses."),
+		N_("Ele permite criar, excluir e modificar partiï¿½ï¿½es em um dispositivo de bloco."),
 		"  ",
-		N_("Command      Meaning"),
-		N_("-------      -------"),
-		N_("  b          Toggle bootable flag of the current partition"),
-		N_("  d          Delete the current partition"),
-		N_("  h          Print this screen"),
-		N_("  n          Create new partition from free space"),
-		N_("  q          Quit program without writing partition table"),
-		N_("  r          Reduce or enlarge the current partition"),
-		N_("  s          Fix partitions order (only when in disarray)"),
-		N_("  t          Change the partition type"),
-		N_("  u          Dump disk layout to sfdisk compatible script file"),
-		N_("  W          Write partition table to disk (you must enter uppercase W);"),
-	/*	N_("               since this might destroy data on the disk, you must either"),
-		N_("               confirm or deny the write by entering 'yes' or 'no'"), */
-		N_("  x          Display/hide extra information about a partition"),
-		N_("Up Arrow     Move cursor to the previous partition"),
-		N_("Down Arrow   Move cursor to the next partition"),
-		N_("Left Arrow   Move cursor to the previous menu item"),
-		N_("Right Arrow  Move cursor to the next menu item"),
+		N_("Comando      Significado"),
+		N_("-------      -----------"),
+		N_("  b          Alternar o status de inicializï¿½vel da partiï¿½ï¿½o atual;"),
+		N_("  d          Excluir a partiï¿½ï¿½o atual"),
+		N_("  h          Exibir esta tela"),
+		N_("  n          Criar nova partiï¿½ï¿½o a partir do espaï¿½o livre"),
+		N_("  q          Sair do programa sem salvar a tabela de partiï¿½ï¿½es"),
+		N_("  r          Reduzir ou aumentar o tamanho da partiï¿½ï¿½o atual"),
+		N_("  s          Corrigir a ordem das partiï¿½ï¿½es (apenas quando desordenadas)"),
+		N_("  t          Alterar o tipo da partiï¿½ï¿½o"),
+		N_("  u          Exportar layout do disco para um script compatï¿½vel com sfdisk"),
+		N_("  W          Salvar a tabela de partiï¿½ï¿½es no disco (ï¿½ necessï¿½rio usar W maiï¿½sculo);"),
+	/*	N_("               como isso pode destruir dados no disco, vocï¿½ deve confirmar"),
+		N_("               ou negar a gravaï¿½ï¿½o digitando 'sim' ou 'nï¿½o'"), */
+		N_("  x          Exibir/ocultar informaï¿½ï¿½es extras sobre uma partiï¿½ï¿½o"),
+		N_("Seta para Cima   Mover o cursor para a partiï¿½ï¿½o anterior"),
+		N_("Seta para Baixo  Mover o cursor para a prï¿½xima partiï¿½ï¿½o"),
+		N_("Seta para a Esquerda   Mover o cursor para o item de menu anterior"),
+		N_("Seta para a Direita    Mover o cursor para o prï¿½ximo item de menu"),
 		"  ",
-		N_("Note: All of the commands can be entered with either upper or lower"),
-		N_("case letters (except for Write)."),
+		N_("Nota: Todos os comandos podem ser digitados em letras maiï¿½sculas ou"),
+		N_("(minï¿½sculas exceto para Salvar)."),
 		"  ",
-		N_("Use lsblk(8) or partx(8) to see more details about the device."),
+		N_("Use lsblk(8) ou partx(8) para ver mais detalhes sobre o dispositivo."),
 		"  ",
 		"  ",
 		"Copyright (C) 2014-2017 Karel Zak <kzak@redhat.com>"
@@ -2294,7 +2294,7 @@ static int ui_help(void)
 	for (i = 0; i < ARRAY_SIZE(help); i++)
 		mvaddstr(i, 1, _(help[i]));
 
-	ui_info(_("Press a key to continue."));
+	ui_info(_("Pressione uma tecla para continuar."));
 
 	getch();
 
@@ -2380,7 +2380,7 @@ static int main_menu_action(struct cfdisk *cf, int key)
 			 fdisk_is_label(cf->cxt, SGI) ? SGI_FLAG_BOOT : 0;
 
 		if (fl && fdisk_toggle_partition_flag(cf->cxt, n, fl))
-			warn = _("Could not toggle the flag.");
+			warn = _("Nï¿½o foi possï¿½vel alternar a flag.");
 		else if (fl)
 			ref = 1;
 		break;
@@ -2390,9 +2390,9 @@ static int main_menu_action(struct cfdisk *cf, int key)
 #endif
 	case 'd': /* Delete */
 		if (fdisk_delete_partition(cf->cxt, n) != 0)
-			warn = _("Could not delete partition %zu.");
+			warn = _("Nï¿½o foi possï¿½vel excluir a partiï¿½ï¿½o %zu.");
 		else
-			info = _("Partition %zu has been deleted.");
+			info = _("A partiï¿½ï¿½o %zu foi excluï¿½da.");
 		ref = 1;
 		break;
 	case 'h': /* Help */
@@ -2413,7 +2413,7 @@ static int main_menu_action(struct cfdisk *cf, int key)
 		start = fdisk_partition_get_start(pa);
 		size = max_size = dflt_size = fdisk_partition_get_size(pa) * fdisk_get_sector_size(cf->cxt);
 
-		if (ui_get_size(cf, _("Partition size: "), &size,
+		if (ui_get_size(cf, _("Tamanho da partiï¿½ï¿½o: "), &size,
 				fdisk_get_sector_size(cf->cxt),
 				max_size, &expsize) == -CFDISK_ERR_ESC)
 			break;
@@ -2454,9 +2454,9 @@ static int main_menu_action(struct cfdisk *cf, int key)
 		ref = 1;
 
 		if (t && fdisk_set_partition_type(cf->cxt, n, t) == 0)
-			info = _("Changed type of partition %zu.");
+			info = _("Alterado o tipo de partiï¿½ï¿½o %zu.");
 		else
-			info = _("The type of partition %zu is unchanged.");
+			info = _("O tipo de partiï¿½ï¿½o %zu nï¿½o foi alterado.");
 		break;
 	}
 	case 'r': /* resize */
@@ -2477,7 +2477,7 @@ static int main_menu_action(struct cfdisk *cf, int key)
 		size *= fdisk_get_sector_size(cf->cxt);
 		max_size = size;
 
-		if (ui_get_size(cf, _("New size: "), &size,
+		if (ui_get_size(cf, _("Novo tamanho: "), &size,
 				fdisk_get_sector_size(cf->cxt),
 				max_size, NULL) == -CFDISK_ERR_ESC)
 			break;
@@ -2492,52 +2492,52 @@ static int main_menu_action(struct cfdisk *cf, int key)
 		fdisk_unref_partition(npa);
 		if (rc == 0) {
 			ref = 1;
-			info = _("Partition %zu resized.");
-		}
-		break;
-	}
-	case 's': /* Sort */
-		if (cf->wrong_order) {
-			fdisk_reorder_partitions(cf->cxt);
-			ref = 1;
-		}
-		break;
-	case 'u': /* dUmp */
-		ui_script_write(cf);
-		break;
-case 'W': /* Write */
-{
-    // Removido 'char buf[64] = { 0 };' - variável não utilizada
+			info = _("Partiï¿½ï¿½o %zu redimensionada.");
+        }
+        break;
+    }
+    case 's': /* Sort */
+        if (cf->wrong_order) {
+            fdisk_reorder_partitions(cf->cxt);
+            ref = 1;
+        }
+        break;
+    case 'u': /* dUmp */
+        ui_script_write(cf);
+        break;
+    case 'W': /* Write */
+    {
+        // Removido 'char buf[64] = { 0 };' - variÃ¡vel nÃ£o utilizada
 
-    if (fdisk_is_readonly(cf->cxt)) {
-        warn = _("Device is open in read-only mode.");
-			break;
-		}
+        if (fdisk_is_readonly(cf->cxt)) {
+            warn = _("O dispositivo estï¿½ aberto no modo somente leitura.");
+            break;
+        }
 
 		/* WIN98QI hack: Don't have the user have to write "yes" to save the mbr - this is very cumbersome.
 		rc = ui_get_string(
-			  _("Are you sure you want to write the partition "
-			    "table to disk? "),
-			  _("Type \"yes\" or \"no\", or press ESC to leave this dialog."),
+			  _("Vocï¿½ tem certeza de que deseja gravar a tabela de "
+			    "partiï¿½ï¿½es no disco? "),
+			  _("Digite \"sim\" ou \"nï¿½o\", ou pressione ESC para sair deste diï¿½logo."),
 			  buf, sizeof(buf));
 
 		ref = 1;
-		if (rc <= 0 || (strcasecmp(buf, "yes") != 0 &&
-				strcasecmp(buf, _("yes")) != 0)) {
-			info = _("Did not write partition table to disk.");
+		if (rc <= 0 || (strcasecmp(buf, "sim") != 0 &&
+				strcasecmp(buf, _("sim")) != 0)) {
+			info = _("A tabela de partiï¿½ï¿½es nï¿½o foi gravada no disco.");
 			break;
 		}
 		*/
 
 		rc = fdisk_write_disklabel(cf->cxt);
 		if (rc)
-			warn = _("Failed to write disklabel.");
+			warn = _("Falha ao gravar a tabela de partiï¿½ï¿½es.");
 		else {
 			if (cf->device_is_used)
 				fdisk_reread_changes(cf->cxt, cf->original_layout);
 			else
 				fdisk_reread_partition_table(cf->cxt);
-			info = _("The partition table has been altered.");
+			info = _("A tabela de partiï¿½ï¿½es foi alterada.");
 		}
 		cf->nwrites++;
 		break;
@@ -2560,7 +2560,7 @@ case 'W': /* Write */
 	else if (info)
 		ui_info(info, n + 1);
 	else if (key == 'n' && cf->wrong_order && org_order == 0)
-		 ui_info(_("Note that partition table entries are not in disk order now."));
+		 ui_info(_("Observe que as entradas da tabela de partiï¿½ï¿½es nï¿½o estï¿½o mais na ordem do disco."));
 
 	return 0;
 }
@@ -2594,13 +2594,13 @@ static int ui_run(struct cfdisk *cf)
 
 	ui_lines = LINES;
 	ui_cols = COLS;
-	DBG(UI, ul_debug("start cols=%zu, lines=%zu", ui_cols, ui_lines));
+	DBG(UI, ul_debug("iniciar cols=%zu, linhas=%zu", ui_cols, ui_lines));
 
 	if (fdisk_get_collision(cf->cxt)) {
-		ui_warnx(_("Device already contains a %s signature; it will be removed by a write command."),
+		ui_warnx(_("O dispositivo jï¿½ contï¿½m uma assinatura %s.; ela serï¿½ removida por um comando de gravaï¿½ï¿½o."),
 				fdisk_get_collision(cf->cxt));
 		fdisk_enable_wipe(cf->cxt, 1);
-		ui_hint(_("Press a key to continue."));
+		ui_hint(_("Pressione uma tecla para continuar."));
 		getch();
 	}
 
@@ -2609,7 +2609,7 @@ static int ui_run(struct cfdisk *cf)
 		if (rc < 0) {
 			errno = -rc;
 			ui_err(EXIT_FAILURE,
-					_("failed to create a new disklabel"));
+					_("falha ao criar um novo rï¿½tulo de disco"));
 		}
 		if (rc)
 			return rc;
@@ -2618,7 +2618,7 @@ static int ui_run(struct cfdisk *cf)
 	cols_init(cf);
 	rc = lines_refresh(cf);
 	if (rc)
-		ui_errx(EXIT_FAILURE, _("failed to read partitions"));
+		ui_errx(EXIT_FAILURE, _("falha ao ler partiï¿½ï¿½es"));
 
 	menu_push(cf, main_menuitems);
 	cf->menu->ignore_cb = main_menu_ignore_keys;
@@ -2631,11 +2631,11 @@ static int ui_run(struct cfdisk *cf)
 	ui_draw_extra(cf);
 
 	if (fdisk_is_readonly(cf->cxt))
-		ui_warnx(_("Device is open in read-only mode. Changes will remain in memory only."));
+		ui_warnx(_("O dispositivo estï¿½ aberto no modo somente leitura. As alteraï¿½ï¿½es permanecerï¿½o apenas na memï¿½ria."));
 	else if (cf->device_is_used)
-		ui_warnx(_("Device is currently in use, repartitioning is probably a bad idea."));
+		ui_warnx(_("O dispositivo estï¿½ atualmente em uso, reparticionï¿½-lo provavelmente nï¿½o ï¿½ uma boa ideia."));
 	else if (cf->wrong_order)
-		ui_info(_("Note that partition table entries are not in disk order now."));
+		ui_info(_("Observe que as entradas da tabela de partiï¿½ï¿½es nï¿½o estï¿½o na ordem do disco agora."));
 
 	while (!sig_die) {
 		int key = getch();
@@ -2719,20 +2719,20 @@ static void __attribute__((__noreturn__)) usage(void)
 	FILE *out = stdout;
 	fputs(USAGE_HEADER, out);
 	fprintf(out,
-	      _(" %1$s [options] <disk>\n"), program_invocation_short_name);
+	      _(" %1$s [opï¿½ï¿½es] <disco>\n"), program_invocation_short_name);
 
 	fputs(USAGE_SEPARATOR, out);
-	fputs(_("Display or manipulate a disk partition table.\n"), out);
+	fputs(_("Exibir ou manipular uma tabela de partiï¿½ï¿½es de disco.\n"), out);
 
 	fputs(USAGE_OPTIONS, out);
 	fprintf(out,
-	      _(" -L, --color[=<when>]     colorize output (%s, %s or %s)\n"), "auto", "always", "never");
+	      _(" -L, --color[=<when>]   colorir a saï¿½da (%s, %s ou %s)\n"), "auto", "always", "never");
 	fprintf(out,
 	        "                            %s\n", USAGE_COLORS_DEFAULT);
-	fputs(_(" -z, --zero               start with zeroed partition table\n"), out);
+	fputs(_(" -z, --zero               iniciar com a tabela de partiï¿½ï¿½es zerada\n"), out);
 	fprintf(out,
-	      _("     --lock[=<mode>]      use exclusive device lock (%s, %s or %s)\n"), "yes", "no", "nonblock");
-	fputs(_(" -r, --read-only          forced open cfdisk in read-only mode\n"), out);
+	      _("     --lock[=<mode>]      usar bloqueio exclusivo do dispositivo (%s, %s ou %s)\n"), "yes", "no", "nonblock");
+	fputs(_(" -r, --read-only          forï¿½ar a abertura do cfdisk no modo somente leitura\n"), out);
 
 	fputs(USAGE_SEPARATOR, out);
 	printf(USAGE_HELP_OPTIONS(26));
@@ -2775,7 +2775,7 @@ int main(int argc, char *argv[])
 			colormode = UL_COLORMODE_AUTO;
 			if (optarg)
 				colormode = colormode_or_err(optarg,
-						_("unsupported color mode"));
+						_("modo de cor nï¿½o suportado"));
 			break;
                 case 'r':
                         read_only = 1;
@@ -2805,7 +2805,7 @@ int main(int argc, char *argv[])
 	cfdisk_init_debug();
 	cf->cxt = fdisk_new_context();
 	if (!cf->cxt)
-		err(EXIT_FAILURE, _("failed to allocate libfdisk context"));
+		err(EXIT_FAILURE, _("falha ao alocar o contexto do libfdisk"));
 
 	fdisk_set_ask(cf->cxt, ask_callback, (void *) cf);
 
@@ -2827,7 +2827,7 @@ int main(int argc, char *argv[])
 	if (rc == -EACCES && read_only == 0)
 		rc = fdisk_assign_device(cf->cxt, diskpath, 1);
 	if (rc != 0)
-		err(EXIT_FAILURE, _("cannot open %s"), diskpath);
+		err(EXIT_FAILURE, _("nï¿½o ï¿½ possï¿½vel abrir %s"), diskpath);
 
 	if (!fdisk_is_readonly(cf->cxt)) {
 		if (blkdev_lock(fdisk_get_devfd(cf->cxt), diskpath, lockmode) != 0)
@@ -2854,6 +2854,6 @@ int main(int argc, char *argv[])
 #endif
 	rc = fdisk_deassign_device(cf->cxt, cf->nwrites == 0);
 	fdisk_unref_context(cf->cxt);
-	DBG(MISC, ul_debug("bye! [rc=%d]", rc));
+	DBG(MISC, ul_debug("tchau! [rc=%d]", rc));
 	return rc == 0 ? EXIT_SUCCESS : EXIT_FAILURE;
 }
