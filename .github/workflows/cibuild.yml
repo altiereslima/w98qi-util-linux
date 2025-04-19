@@ -32,6 +32,10 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget sudo
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -67,6 +71,10 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget sudo
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -97,6 +105,10 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget sudo
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -122,6 +134,10 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
+      - name: Install required dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y wget sudo
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
@@ -152,6 +168,9 @@ jobs:
             export QEMU_USER=1
             export CFLAGS="-Wno-error -Wno-unused-variable -Wno-unused-function"
 
+            # name: Install required dependencies
+            sudo apt-get update
+            sudo apt-get install -y wget sudo
             # name: Add LLVM repository
             wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
             for i in {1..5}; do
