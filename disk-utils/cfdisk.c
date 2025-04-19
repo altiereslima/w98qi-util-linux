@@ -2089,12 +2089,7 @@ done:
 	return t;
 }
 
-/* Comente ou remova a função 'ui_script_read'
-/*
-static void ui_script_read() {
-    // ...função não utilizada...
-}
-*/
+/* Este é um comentário correto */
 
 static int ui_script_write(struct cfdisk *cf)
 {
