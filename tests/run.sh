@@ -182,6 +182,11 @@ if [ -z "$has_ubsan_opt" ]; then
 	fi
 fi
 
+if ! ldd ./kill | grep -q "libasan"; then
+  echo "Erro: Runtime do AddressSanitizer (ASan) não detectado. Não é possível continuar."
+  exit 1
+fi
+
 declare -a comps
 if [ -n "$SUBTESTS" ]; then
 	# selected tests only
