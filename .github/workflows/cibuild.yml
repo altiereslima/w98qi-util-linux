@@ -34,8 +34,10 @@ jobs:
         uses: actions/checkout@v1
       - name: Add LLVM repository
         run: |
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          for i in {1..5}; do
+              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
+          done
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
@@ -64,8 +66,10 @@ jobs:
         uses: actions/checkout@v1
       - name: Add LLVM repository
         run: |
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          for i in {1..5}; do
+              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
+          done
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
@@ -90,8 +94,10 @@ jobs:
         uses: actions/checkout@v1
       - name: Add LLVM repository
         run: |
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          for i in {1..5}; do
+              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
+          done
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Meson configure
@@ -111,8 +117,10 @@ jobs:
         uses: actions/checkout@v1
       - name: Add LLVM repository
         run: |
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+          for i in {1..5}; do
+              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
+          done
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure
@@ -136,8 +144,10 @@ jobs:
             export CFLAGS="-Wno-error -Wno-unused-variable -Wno-unused-function"
 
             # name: Add LLVM repository
-            sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
             wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
+            for i in {1..5}; do
+                sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
+            done
             # name: Ubuntu setup
             .github/workflows/cibuild-setup-ubuntu.sh
             git config --global --add safe.directory "$PWD"
