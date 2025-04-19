@@ -32,16 +32,14 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
-      - name: Install required dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget sudo
+          sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
-      - name: Validate LLVM repository
-        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
@@ -128,16 +126,14 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
-      - name: Install required dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget sudo
+          sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
-      - name: Validate LLVM repository
-        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
@@ -186,16 +182,14 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
-      - name: Install required dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget sudo
+          sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
-      - name: Validate LLVM repository
-        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
@@ -229,16 +223,14 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
-      - name: Install required dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y wget sudo
+          sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
           sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
-      - name: Validate LLVM repository
-        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
@@ -277,9 +269,9 @@ jobs:
             export QEMU_USER=1
             export CFLAGS="-Wno-error -Wno-unused-variable -Wno-unused-function"
 
-            # name: Install required dependencies
+            # name: Install dependencies
             sudo apt-get update
-            sudo apt-get install -y wget sudo
+            sudo apt-get install -y build-essential sudo wget curl
             # name: Add LLVM repository
             wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
             sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
@@ -302,16 +294,11 @@ jobs:
             # name: Ubuntu setup
             .github/workflows/cibuild-setup-ubuntu.sh
             git config --global --add safe.directory "$PWD"
-            # Configure & Make
-            .github/workflows/cibuild.sh CONFIGURE MAKE
-            # Verify test binaries
-            if [ ! -f ./tests/run.sh ]; then
-              echo "Test binaries não foram gerados!"
-              exit 1
-            fi
-            # Verify 'kill' binary
-            if [ ! -f ./kill ]; then
-              echo "Erro: O binário 'kill' não foi gerado."
+            # Build and validate binaries
+            ./configure
+            make
+            if [ ! -f ./tests/run.sh ] || [ ! -f ./kill ]; then
+              echo "Erro: Um ou mais binários não foram gerados."
               exit 1
             fi
             # Check
