@@ -44,10 +44,10 @@ jobs:
           done
       - name: Enable detailed logs
         run: set -x
-      - name: Install build dependencies
+      - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential gcc-10 g++-10
+          sudo apt-get install -y build-essential gcc-10 g++-10 libmylibrary-dev
       - name: Configure GCC
         run: |
           export CC=gcc-10
@@ -59,8 +59,12 @@ jobs:
           CC: gcc-10
           CXX: g++-10
           CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function -fPIC"
-          LIBS: "-lmylibrary" # Substitua 'mylibrary' pela biblioteca correta
-        run: .github/workflows/cibuild.sh CONFIGURE MAKE
+          LDFLAGS: ""
+        run: |
+          ./configure --disable-use-tty-group --disable-makeinstall-chown \
+            --enable-all-programs --without-python --enable-werror \
+            --enable-asan --enable-ubsan
+          make
       - name: Show config.log on failure
         if: failure()
         run: cat config.log
