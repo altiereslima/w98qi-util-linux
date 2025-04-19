@@ -32,54 +32,38 @@ jobs:
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
-      - name: Install dependencies
+      - name: Setup build environment
         run: |
           sudo apt-get update
-          sudo apt-get install -y build-essential sudo wget curl
+          sudo apt-get install -y software-properties-common curl wget
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
-          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
-            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
-            exit 1
+          # Try LLVM 15 first, fallback to 14 if not available
+          if curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+            sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main"
+          else
+            sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
           fi
-      - name: Add repository with retry
-        run: |
-          for i in {1..3}; do
-            if sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; then
-              echo "Repositório adicionado com sucesso."
-              break
-            fi
-            echo "Tentativa $i falhou. Retentando em 5 segundos..."
-            sleep 5
-          done
-      - name: Enable detailed logs
-        run: set -x
-      - name: Update and install dependencies
-        run: |
           sudo apt-get update
-          # Substitua 'libmylibrary-dev' pelo nome correto do pacote ou remova se não for necessário
-          sudo apt-get install -y build-essential gcc-10 g++-10 || echo "Pacote não encontrado, continuando sem ele."
-      - name: Configure GCC
+      - name: Install build dependencies
         run: |
-          export CC=gcc-10
-          export CXX=g++-10
-      - name: Ubuntu setup
-        run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
-      - name: Install ASan dependencies
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y libasan6
-      - name: Configure & Make
+          sudo apt-get install -y build-essential gcc make gcc-10 g++-10 libasan6
+      - name: Configure and build
         env:
           CC: gcc-10
           CXX: g++-10
           CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function -fPIC"
-          LDFLAGS: ""
         run: |
-          ./configure || echo "Erro ao executar o configure"
-          make || echo "Erro ao executar o make"
+          ./configure || {
+            echo "Configure failed. Check config.log:"
+            cat config.log || echo "config.log not found"
+            exit 1
+          }
+          make -j$(nproc) || {
+            echo "Make failed"
+            exit 1
+          }
       - name: Show config.log on failure
         if: failure()
         run: |
@@ -270,11 +254,11 @@ jobs:
             export CFLAGS="-Wno-error -Wno-unused-variable -Wno-unused-function"
 
             # name: Install dependencies
-            sudo apt-get update
-            sudo apt-get install -y build-essential sudo wget curl
+            apt-get update
+            apt-get install -y build-essential gcc make
             # name: Add LLVM repository
-            wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-            sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+            wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+            apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
             # name: Validate LLVM repository
             if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
               echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
@@ -282,7 +266,7 @@ jobs:
             fi
             # name: Add repository with retry
             for i in {1..3}; do
-              if sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; then
+              if apt-add-repository -y ppa:ubuntu-toolchain-r/test; then
                 echo "Repositório adicionado com sucesso."
                 break
               fi
@@ -295,8 +279,12 @@ jobs:
             .github/workflows/cibuild-setup-ubuntu.sh
             git config --global --add safe.directory "$PWD"
             # Build and validate binaries
-            ./configure
-            make
+            if [ -x "$(command -v sudo)" ]; then
+              sudo ./configure
+            else
+              ./configure
+            fi
+            make -j$(nproc)
             if [ ! -f ./tests/run.sh ] || [ ! -f ./kill ]; then
               echo "Erro: Um ou mais binários não foram gerados."
               exit 1
