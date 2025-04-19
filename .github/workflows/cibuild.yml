@@ -108,6 +108,10 @@ jobs:
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
         run: .github/workflows/cibuild.sh CONFIGURE MAKE
+      - name: Compile tests
+        run: make check-programs
+      - name: Run tests
+        run: ./tests/run.sh --show-diff
       - name: Check
         run: sudo -E .github/workflows/cibuild.sh CHECK
       - name: Coveralls
