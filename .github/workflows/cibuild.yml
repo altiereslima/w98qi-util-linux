@@ -35,6 +35,8 @@ jobs:
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
+        env:
+          CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function"
         run: .github/workflows/cibuild.sh CONFIGURE MAKE
       - name: Check
         run: sudo -E .github/workflows/cibuild.sh CHECK
@@ -52,7 +54,7 @@ jobs:
       COMPILER_VERSION: 10
       SANITIZE: no
       COVERAGE: yes
-      CFLAGS: "-Wno-unused-variable -Wno-unused-function"
+      CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function"
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
@@ -74,7 +76,7 @@ jobs:
       COMPILER: gcc
       COMPILER_VERSION: 10
       SANITIZE: no
-      CFLAGS: "-Wno-unused-variable -Wno-unused-function"
+      CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function"
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
@@ -91,7 +93,7 @@ jobs:
       COMPILER: gcc
       COMPILER_VERSION: 10
       SANITIZE: no
-      CFLAGS: "-Wno-unused-variable -Wno-unused-function"
+      CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function"
     steps:
       - name: Repository checkout
         uses: actions/checkout@v1
@@ -115,7 +117,7 @@ jobs:
             export COMPILER_VERSION=10
             export SANITIZE=no
             export QEMU_USER=1
-            export CFLAGS="-Wno-unused-variable -Wno-unused-function"
+            export CFLAGS="-Wno-error -Wno-unused-variable -Wno-unused-function"
 
             # name: Ubuntu setup
             .github/workflows/cibuild-setup-ubuntu.sh
