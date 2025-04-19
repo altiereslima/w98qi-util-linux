@@ -2089,35 +2089,12 @@ done:
 	return t;
 }
 
-static int ui_script_read(struct cfdisk *cf)
-{
-	struct fdisk_script *sc = NULL;
-	char buf[PATH_MAX] = { 0 };
-	int rc;
-
-	erase();
-	rc = ui_get_string(	_("Digite o nome do arquivo de script: "),
-				_("O arquivo de script ser� aplicado � tabela de parti��es na mem�ria."),
-				buf, sizeof(buf));
-	if (rc <= 0)
-		return rc;
-
-	rc = -1;
-	errno = 0;
-	sc = fdisk_new_script_from_file(cf->cxt, buf);
-	if (!sc && errno)
-		ui_warn(_("N�o � poss�vel abrir %s"), buf);
-	else if (!sc)
-		ui_warnx(_("Falha ao analisar o arquivo de script %s"), buf);
-	else if (fdisk_apply_script(cf->cxt, sc) != 0)
-		ui_warnx(_("Falha ao aplicar o script %s"), buf);
-	else
-		rc = 0;
-
-	ui_clean_hint();
-	fdisk_unref_script(sc);
-	return rc;
+/* Comente ou remova a função 'ui_script_read'
+/*
+static void ui_script_read() {
+    // ...função não utilizada...
 }
+*/
 
 static int ui_script_write(struct cfdisk *cf)
 {
