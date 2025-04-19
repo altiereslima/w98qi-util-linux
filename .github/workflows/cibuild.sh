@@ -112,7 +112,7 @@ for phase in "${PHASES[@]}"; do
         ;;
     MAKE)
         make -j"$(nproc)"
-        make -j"$(nproc)" check-programs
+        make -j"$(nproc)" check-programs || { echo "Erro ao compilar os testes"; exit 1; }
         ;;
     INSTALL)
         make install DESTDIR=/tmp/dest
