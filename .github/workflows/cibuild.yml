@@ -39,12 +39,10 @@ jobs:
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          for i in {1..5}; do
-              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
-          done
+          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
       - name: Validate LLVM repository
         run: |
-          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
           fi
@@ -137,12 +135,10 @@ jobs:
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          for i in {1..5}; do
-              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
-          done
+          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
       - name: Validate LLVM repository
         run: |
-          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
           fi
@@ -197,12 +193,10 @@ jobs:
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          for i in {1..5}; do
-              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
-          done
+          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
       - name: Validate LLVM repository
         run: |
-          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
           fi
@@ -242,12 +236,10 @@ jobs:
       - name: Add LLVM repository
         run: |
           wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          for i in {1..5}; do
-              sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
-          done
+          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
       - name: Validate LLVM repository
         run: |
-          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+          if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
             echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
             exit 1
           fi
@@ -290,11 +282,9 @@ jobs:
             sudo apt-get install -y wget sudo
             # name: Add LLVM repository
             wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-            for i in {1..5}; do
-                sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
-            done
+            sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
             # name: Validate LLVM repository
-            if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-15/ > /dev/null; then
+            if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
               echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
               exit 1
             fi
