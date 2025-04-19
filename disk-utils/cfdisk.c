@@ -2484,8 +2484,7 @@ static int main_menu_action(struct cfdisk *cf, int key)
 		break;
 	case 'W': /* Write */
 	{
-		char buf[64] = { 0 };
-
+		/* Este é um comentário correto */
 		if (fdisk_is_readonly(cf->cxt)) {
 			warn = _("O dispositivo est� aberto no modo somente leitura.");
 			break;
