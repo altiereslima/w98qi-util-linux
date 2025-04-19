@@ -38,11 +38,14 @@ jobs:
           for i in {1..5}; do
               sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
           done
+      - name: Enable detailed logs
+        run: set -x
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
         env:
-          CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function"
+          CFLAGS: "-Wno-error -Wno-unused-variable -Wno-unused-function -fPIC"
+          LIBS: "-lmylibrary" # Substitua 'mylibrary' pela biblioteca correta
         run: .github/workflows/cibuild.sh CONFIGURE MAKE
       - name: Check
         run: sudo -E .github/workflows/cibuild.sh CHECK
@@ -70,6 +73,8 @@ jobs:
           for i in {1..5}; do
               sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
           done
+      - name: Enable detailed logs
+        run: set -x
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure & Make
@@ -98,6 +103,8 @@ jobs:
           for i in {1..5}; do
               sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
           done
+      - name: Enable detailed logs
+        run: set -x
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Meson configure
@@ -121,6 +128,8 @@ jobs:
           for i in {1..5}; do
               sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
           done
+      - name: Enable detailed logs
+        run: set -x
       - name: Ubuntu setup
         run: sudo -E .github/workflows/cibuild-setup-ubuntu.sh
       - name: Configure
@@ -148,6 +157,8 @@ jobs:
             for i in {1..5}; do
                 sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-15 main" && break || sleep 10
             done
+            # name: Enable detailed logs
+            set -x
             # name: Ubuntu setup
             .github/workflows/cibuild-setup-ubuntu.sh
             git config --global --add safe.directory "$PWD"
