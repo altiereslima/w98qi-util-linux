@@ -123,10 +123,14 @@ jobs:
           sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
-          wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+          # Use uma abordagem mais moderna para adicionar a chave GPG
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/llvm-snapshot-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot-archive-keyring.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update
+      - name: Validate LLVM repository
+        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
-            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
+            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão."
             exit 1
           fi
       - name: Add repository with retry
@@ -179,10 +183,14 @@ jobs:
           sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
-          wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+          # Use uma abordagem mais moderna para adicionar a chave GPG
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/llvm-snapshot-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot-archive-keyring.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update
+      - name: Validate LLVM repository
+        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
-            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
+            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão."
             exit 1
           fi
       - name: Add repository with retry
@@ -220,10 +228,14 @@ jobs:
           sudo apt-get install -y build-essential sudo wget curl
       - name: Add LLVM repository
         run: |
-          wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | sudo apt-key add -
-          sudo apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+          # Use uma abordagem mais moderna para adicionar a chave GPG
+          curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | sudo gpg --dearmor -o /usr/share/keyrings/llvm-snapshot-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot-archive-keyring.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main" | sudo tee /etc/apt/sources.list.d/llvm.list
+          sudo apt-get update
+      - name: Validate LLVM repository
+        run: |
           if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
-            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
+            echo "O repositório LLVM não está acessível. Verifique a URL ou a versão."
             exit 1
           fi
       - name: Add repository with retry
@@ -264,8 +276,9 @@ jobs:
             apt-get update
             apt-get install -y build-essential gcc make
             # name: Add LLVM repository
-            wget -qO - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
-            apt-add-repository "deb http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main"
+            curl -fsSL https://apt.llvm.org/llvm-snapshot.gpg.key | gpg --dearmor -o /usr/share/keyrings/llvm-snapshot-archive-keyring.gpg
+            echo "deb [signed-by=/usr/share/keyrings/llvm-snapshot-archive-keyring.gpg] http://apt.llvm.org/focal/ llvm-toolchain-focal-14 main" | tee /etc/apt/sources.list.d/llvm.list
+            apt-get update
             # name: Validate LLVM repository
             if ! curl -s --head --fail http://apt.llvm.org/focal/dists/llvm-toolchain-focal-14/ > /dev/null; then
               echo "O repositório LLVM não está acessível. Verifique a URL ou a versão." >&2
